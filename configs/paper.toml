@@ -1,0 +1,36 @@
+# Exact online-comparison grid reported in Table 4 of the accompanying paper.
+# `dimension = 1024` refers to the flattened matrix dimension used by Table 2.
+
+[falcon]
+q = 12289
+n = 512
+rows = [1000, 3000, 5000, 7000]
+
+[kyber]
+q = 3329
+n = 256
+rows = [10000, 30000, 50000, 100000]
+
+[dilithium]
+q = 8380417
+n = 256
+rows = [3000, 5000, 10000, 100000]
+
+[rpt]
+dimensions = [512, 2048, 4096, 8192]
+bound = 50
+
+[[dimension_sweep]]
+rows = 3000
+dimension = 1024
+q = 3329
+
+[[dimension_sweep]]
+rows = 3000
+dimension = 1024
+q = 12289
+
+[[dimension_sweep]]
+rows = 3000
+dimension = 1024
+q = 8380417

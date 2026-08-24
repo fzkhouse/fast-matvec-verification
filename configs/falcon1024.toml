@@ -1,0 +1,8 @@
+name = "falcon1024"
+q = 12289
+n = 512
+k = 2
+l = 2
+# This label denotes the paper's flattened 1024-dimensional Falcon setting
+# (K * n = 2 * 512), not the Falcon-1024 signature parameter set.
+paper_rows = [1000, 3000, 5000, 7000]

@@ -1,0 +1,7 @@
+build/
+data/generated/
+results/
+*.o
+*.bin
+__pycache__/
+

@@ -1,0 +1,12 @@
+batch-vrfy-open
+
+This repository contains the author's portable experimental reference and
+baseline implementations for batched verification of lattice-style
+matrix-vector relations.
+
+Third-party implementations are not relicensed by this project. If they are
+added under third_party/, their original LICENSE/COPYING and attribution files
+must remain beside the copied source. The current release intentionally keeps
+the verifier self-contained and does not vendor third-party cryptographic
+implementations.
+
