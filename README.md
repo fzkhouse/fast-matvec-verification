@@ -42,6 +42,10 @@ cover Falcon, Kyber, Dilithium, and RPT. `build/dilithium5-gen` and
 historical files produced in separate generator runs. RPT uses the original
 four files `mat_B_N.txt`, `vec_zu_N.txt`, `mat_C_N.txt`, and `mat_ro_N.txt`.
 
+
+
+
+
 ## Benchmark output
 
 ```sh
@@ -56,6 +60,18 @@ added; time statistics remain available on every supported platform.
 `results/*-smoke.csv` contains one-run developer smoke results only.  These
 files demonstrate matching input and successful verification; they are not the
 paper's final nine-run statistics and must not be used to redraw paper tables.
+
+
+
+## Auxiliary scripts for numerical evaluation of probability bounds
+
+The folder `probability_calculation_python` contains auxiliary Python
+scripts for numerical evaluations used in the paper. Specifically,
+
+- `Cw distribution simulation based on Gaussian.py` estimates the distribution of $\|C\omega\|$ using empirical Monte Carlo simulations.
+- `Abort Probability Analysis Based on Chi-Distribution over Gaussian.py` computes the numerical bound $B_2$ for $\mathcal{B}_{\Omega}$.
+
+These scripts are provided to reproduce the probability analysis discussed in the paper.
 
 ## Licensing
 
