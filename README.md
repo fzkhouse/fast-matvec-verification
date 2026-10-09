@@ -1,77 +1,118 @@
 # batch-vrfy-open
 
-Portable, reproducible reference experiments for batched verification of
-lattice-style matrix-vector relations. This is an experimental research
-artifact, not a production cryptographic library. 
+Source artifact for the ASIACRYPT 2026 paper on batched verification of
+lattice-style matrix-vector relations. This repository contains experimental
+research software, not a production cryptographic library.
 
-This package provides a reference implementation of our algorithms. For simplicity, some engineering optimizations used in the experiments are omitted. The implementation reproduces the main performance trends reported in the paper.
+## Artifact badge scope
 
-## Quick start
+This release is submitted for the **Artifacts Available** badge only. It makes
+the source code associated with the paper publicly retrievable. It is not a
+submission for the Artifacts Functional or Artifacts Reproduced badges, and it
+does not claim that a reviewer can reproduce every paper result from this
+source archive alone.
+
+Large experiment fixtures and locally generated benchmark CSV files are not
+part of the source release. They are ignored by Git. Commands that use those
+fixtures therefore require an explicit `--data-root` supplied by the user.
+
+## Contents and paper correspondence
+
+- `reference/` contains the released RLT and RPT reference implementations.
+- `baseline/` contains experiment-specific direct verification baselines.
+- `third_party/` contains the upstream Falcon, Kyber, and Dilithium components
+  linked by the experiment programs.
+- `bench/` and `run.sh` contain benchmark orchestration and CSV summarization.
+- `configs/paper.toml` records the grid associated with Table 4 of the paper;
+  its dimension sweep also records the 1024-dimensional settings associated
+  with Table 2.
+- `tests/` contains the release smoke test.
+
+The detailed mapping from released sources to the original experiment tree is
+in `PROVENANCE.md`. `OPTIMIZATION_POLICY.md` describes which optimizations are
+included in the public reference implementation.
+
+## Platform and dependencies
+
+The paper experiments were developed and run on the following platform:
+
+- CPU: Intel Xeon Platinum 8163 at 2.50 GHz;
+- memory: 64 GB;
+- operating system: Ubuntu 18.04 LTS, x86-64;
+- compiler: GCC 7.3;
+- build tool: GNU Make;
+- scripts: Bash and Python 3.
+
+The released build requires Linux on x86-64. AVX2 is required by all published
+experiment binaries. The Kyber targets additionally require FMA, BMI2, POPCNT,
+and AES-NI CPU support. A C11 compiler, GNU Make, Bash, Python 3, the standard C
+library, and `libm` are required. The source release was also clean-built and
+smoke-tested with GCC 13.3, GNU Make 4.3, and Python 3.12 on Ubuntu 24.04.
+
+## Build and smoke test
 
 ```sh
 make
-./run.sh --scheme falcon512 --impl both --rows 1000,3000,5000,7000 --data-root /path/to/falcon-fixtures
-./run.sh --scheme kyber512 --impl both --rows 10000,30000,50000,100000 --data-root /path/to/kyber-fixtures
-./run.sh --scheme rpt --impl both --rows 512,2048,4096,8192 --data-root /path/to/rpt-fixtures
 make test
 ```
 
-Results are written below `results/`; generated fixtures are ignored by git.
-Large paper fixtures are intentionally not committed, so every benchmark
-command takes an explicit `--data-root` rather than embedding a private path.
+A successful smoke test ends with:
 
-## Implementations
-
-`reference` performs the RLT or RPT batch check; `baseline` is the direct native
-row-by-row implementation actually used by the original experiment scripts.
-The source mapping is recorded in `PROVENANCE.md`.  The public reference path
-is intentionally limited by `OPTIMIZATION_POLICY.md`; performance crossover
-points are reported rather than hidden.
-
-The retained `paper-*-9runs.csv` files report the complete nine-run results.
-The Kyber reference retains its final NTT-domain equality check and is faster
-than the retained native baseline on the released paper grid.
-
-The challenge is a research benchmark mechanism, not a complete security
-proof or a constant-time cryptographic implementation. Do not use this code as
-a replacement for an audited Falcon, Kyber, or Dilithium implementation.
-
-## Parameters and data
-
-The paper comparison grid is in `configs/paper.toml`. The imported sources
-cover Falcon, Kyber, Dilithium, and RPT. `build/dilithium5-gen` and
-`build/dilithium2-gen` create coherent `A/z/u/table` fixtures; do not combine
-historical files produced in separate generator runs. RPT uses the original
-four files `mat_B_N.txt`, `vec_zu_N.txt`, `mat_C_N.txt`, and `mat_ro_N.txt`.
-
-## Benchmark output
-
-```sh
-SCHEME=rpt ROWS=512,2048,4096,8192 DATA_ROOT=/path/to/rpt-fixtures RUNS=9 bench/benchmark.sh
+```text
+published binaries and Dilithium-2/-5 fixtures passed
 ```
 
-The benchmark records pass counts and median/mean online verification time.
-Preprocessing/data-generation time is kept outside the online timing window.
-Some portable paths report zero cycles until a platform-specific counter is
-added; time statistics remain available on every supported platform.
+The smoke test is included as a basic integrity check for the source release;
+it is not a reproduction of the paper's complete experiments.
 
-`results/*-smoke.csv` contains one-run developer smoke results only.  These
-files demonstrate matching input and successful verification; they are not the
-paper's final nine-run statistics and must not be used to redraw paper tables.
+## Running with external fixtures
+
+The unified command has the following form:
+
+```sh
+./run.sh --scheme NAME --impl reference|baseline|both \
+  --rows LIST --runs 9 --data-root /path/to/fixtures --out results/output.csv
+```
+
+Supported scheme names and expected file naming are documented by:
+
+```sh
+./run.sh --help
+```
+
+For example, with separately obtained RPT fixtures:
+
+```sh
+./run.sh --scheme rpt --impl both --rows 512,2048,4096,8192 \
+  --runs 9 --data-root /path/to/rpt-fixtures
+```
+
+The CSV output records the scheme, implementation, dimensions, run count,
+successful verification count, and timing summary. File loading and table
+decoding occur outside the reported online verification window.
 
 ## Auxiliary scripts for numerical evaluation of probability bounds
 
-The folder `probability_calculation_python` contains auxiliary Python
-scripts for numerical evaluations used in the paper. Specifically,
+The `probability_calculation_python/` directory contains auxiliary Python
+scripts for numerical evaluations used in the paper:
 
-- `Cw distribution simulation based on Gaussian.py` estimates the distribution of $\|C\omega\|$ using empirical Monte Carlo simulations.
-- `Abort Probability Analysis Based on Chi-Distribution over Gaussian.py` computes the numerical bound $B_2$ for $\mathcal{B}_{\Omega}$.
+- `Cw distribution simulation based on Gaussian.py` estimates the distribution
+  of $\|C\omega\|$ using empirical Monte Carlo simulations.
+- `Abort Probability Analysis Based on Chi-Distribution over Gaussian.py`
+  computes the numerical bound $B_2$ for $\mathcal{B}_{\Omega}$.
 
-These scripts are provided to reproduce the probability analysis discussed in the paper.
+The directory also contains `norm_distribution_analysis.pdf`, which documents
+the associated numerical analysis.
 
-## Licensing
+## Security notice
 
-Original project code is Apache-2.0. See `NOTICE` before adding any third-party
-source. Third-party Falcon, Kyber, and Dilithium implementations must retain
-their own license and attribution files and must not be represented as this
-project's code.
+The code is a research benchmark mechanism. It is not an audited,
+constant-time implementation and must not replace production Falcon, Kyber,
+Dilithium, or other cryptographic libraries.
+
+## Licensing and provenance
+
+Original project code is released under Apache License 2.0; see `LICENSE`.
+Third-party source remains under its upstream license. See `NOTICE`,
+`third_party/README.md`, and the license file beside each third-party source
+tree. `PROVENANCE.md` records the experiment-source mapping.

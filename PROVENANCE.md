@@ -12,15 +12,18 @@ comparisons.
 | RPT | `reference/rpt/rpt_verify.c` (`RPT_REFERENCE=1`) | same source with `RPT_REFERENCE=0` | original direct `B*z-u` comparison branch |
 
 The public Kyber reference uses the last complete-C verification implementation
-from AC26 history (`05dd808`) as the starting point.  It restores the final
-NTT-domain equality check; the current binary fast path omits that check and
-is deliberately not published.  The public code excludes AC26's assembly
-accumulators, special K=5/L=9 dispatch, packed binary input fast path,
-prefetching, and other private tuning.
+from AC26 history (`05dd808`) as the starting point. It restores the final
+NTT-domain equality check; the private binary fast path that omitted that check
+is deliberately not published. The release includes two small,
+parameter-independent x86-64 assembly helpers for vector accumulation, with C
+fallbacks selected by `USE_KYBER_ASM=0`. It excludes AC26's private
+parameter-specialized assembly kernels, special K=5/L=9 dispatch, packed
+binary input path, prefetch policies, and unpublished tuning constants.
 
-The public Falcon and Dilithium reference trees are copied from the paths
-above, then will be reduced to portable C/ordinary AVX2 only.  Their baseline
-sources are not simplified or substituted.
+The public Falcon and Dilithium reference trees were copied from the original
+experiment paths and retain their ordinary C/AVX2 computation paths. Their
+baseline sources are not simplified or substituted. The exact third-party
+source-package locations and licenses are recorded in `third_party/README.md`.
 
 The historical Dilithium files under the original experiment data directory
 must not be used as a single benchmark fixture: their `A`, `z`, `u`, and table

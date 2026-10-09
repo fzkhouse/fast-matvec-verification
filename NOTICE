@@ -1,12 +1,21 @@
 batch-vrfy-open
+Copyright 2026 the batch-vrfy-open contributors
 
-This repository contains the author's portable experimental reference and
-baseline implementations for batched verification of lattice-style
-matrix-vector relations.
+The original code in this repository is licensed under Apache License 2.0.
+The complete license text is in LICENSE.
 
-Third-party implementations are not relicensed by this project. If they are
-added under third_party/, their original LICENSE/COPYING and attribution files
-must remain beside the copied source. The current release intentionally keeps
-the verifier self-contained and does not vendor third-party cryptographic
-implementations.
+This artifact also redistributes third-party source code. Those files remain
+under their upstream licenses and are not relicensed under Apache-2.0:
 
+* third_party/falcon512avx2: Falcon Round 3 optimized Falcon-512 AVX2
+  implementation, Copyright (c) 2017-2019 Falcon Project, MIT License.
+* third_party/kyber512: NIST-PQ-Submission-Kyber-20201001, including the
+  optimized Kyber-512 AVX2 implementation, public domain. Embedded Keccak/AES
+  files retain the notices in their source headers.
+* third_party/dilithium5: CRYSTALS-Dilithium Round 3 optimized Dilithium-5
+  AVX2 implementation, offered under Public Domain/CC0, Apache-2.0, or
+  GPL-2.0. This artifact relies on the Public Domain/CC0 or Apache-2.0 grant.
+
+Copies of the applicable upstream license texts are located beside each
+third-party source tree. Additional component-specific notices in source-file
+headers must be retained.
